@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+	<head>
+		<meta charset="utf-8">
+		<title>PESSOAS</title>
+		<link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+	</head>
+	<body>
+        <div class = "container">
+        
+        <table class="table">
+            
+        </table>
+
+        <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Cadastro das Pessoas</div>
+
+  <!-- Table -->
+  <table class="table">
+    <thead class="thead">
+                <tr>
+                    <th scope="name">Name</th>
+                    <th scope="number">Number</th>
+                    
+                </tr>
+            </thead>
+           
+            <tbody>
+                <tr>
+                    <td><input type="text" class="form-control"  id='name'></td>
+                    <td><input type="text" class="form-control"  id='number'></td>
+                    <td><button type="button" class="btn btn-default" onclick="salvar()">Salvar</button></td>
+                </tr>
+            </tbody>
+  </table>
+</div>  
+             
+             
+<div class="col-sm-2">
+                
+    <a href='/buscando'class="btn btn-primary"> Buscar a Lista</a>
+    
+</div>
+        
+	</body>
+
+    <script src='js/jquery.js'> </script>
+    <script src='js/sweetalert.js'> </script>
+
+    
+
+    <script>
+        function salvar(){
+        var name = $('#name').val();
+         if(name.trim()==''){//trim ira buscar valor no campo mesmo informando com espaco nao ira deixar salvar
+             swal(
+             "Por Favor!!!",
+             "Insira um Nome"
+             );
+             return;
+         }
+        var number = $('#number').val();
+        if(number.trim()==''){
+             swal(
+                "Por Favor!!!",
+                "Insira um Número"
+             );
+             return;
+        }
+
+        $.ajax({
+            type: 'post', //O URI em uma requisição POST identifica o recurso que manipulará a entidade anexa
+            url: '/confirmar',
+            data:{name:name, number:number}
+
+        }).done(function(data){
+            window.location.href='/'; //se deu certo vou pro index
+        })
+        }
+    </script>
+	
+</html>

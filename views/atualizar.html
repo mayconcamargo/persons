@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+	<head>
+		<meta charset="utf-8">
+		<title>PESSOAS</title>
+		<link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+	</head>
+	<body>
+        <div class = "container">
+        
+
+
+        <div class="panel panel-default">
+        <!-- Default panel contents -->
+          <input type="hidden" id='id' value="{{name._id}}">
+          <div class="panel-heading">Atualizar Cadastro</div>
+          <!-- Table -->
+            <table class="table">
+             <thead class="thead">
+                <tr>
+                    <th scope="name">Name</th>
+                    <th scope="number">Number</th>
+                    
+                </tr>
+            </thead>
+           
+            <tbody>
+                <tr>
+                 
+                    <td><input type="text" class="form-control" placeholder="Name" id='name' value="{{name.name}}"></td>
+                    <td><input type="text" class="form-control" placeholder="Number" id='number'value="{{name.number}}"></td>
+                    <td><button type="button" class="btn btn-default" onclick="salvar()">Salvar</button></td>
+                </tr>
+            </tbody>
+          </table>
+       </div>
+           <td><a href="/" class="btn btn-primary">Voltar</a></td>
+	</body>
+
+    <script src='js/jquery.js'> </script>
+    <script src='js/sweetalert.js'> </script>
+
+    
+
+     <script>
+        function salvar(){
+            var name = $('#name').val();
+            if(name.trim()==''){
+                swal(
+             "Por Favor!!!",
+             "Insira um Nome"
+             );
+             return;
+            }
+            var number = $('#number').val();
+            if(number.trim()==''){
+                swal(
+             "Por Favor!!!",
+             "Insira um Número"
+             );
+             return;
+            }
+            
+            var id=$('#id').val();
+            $.ajax({
+                type: 'put',//o URI na requisição PUT identifica a entidade anexa com a requisição, usado para armazenar a alteracao feita
+                url: '/confirmaralteracao',
+                data: {id:id,name:name,number:number}
+            }).done(function(data){
+                window.location.href='http://localhost:3000/buscando';
+            })
+        }
+    </script>
+	
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <title>PERSONS</title>
+    <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+</head>
+
+<body>
+    <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Nomes Cadastrados</div>
+
+  <!-- Table -->
+  <table class="table">
+    
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th >Name</th>
+                        <th>Number</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="informacoes">
+                    
+                </tbody>
+            
+  </table>
+</div>
+
+    <div class="panel ">
+    <div class="container">
+    
+        <div class="row">
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id='buscar'>
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn" onclick="busca()"> Buscar</button>
+                
+                
+            </div>
+            <div></div>
+            <td><a href="/buscandocadastro" class="btn btn-primary">Voltar</a></td>
+        </div>
+            <div class="col-sm-1">
+                  
+                <nav aria-label="...Page navigation...">
+                    <ul class="pagination"id="paginacao">
+                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        </div>
+            
+            
+    </div>
+</body>
+
+<script src='js/jquery.js'></script>
+<script src="js/sweetalert.js"></script>
+
+<script>
+
+
+    function excluir(id){
+       
+             $.ajax({
+                type: 'post',
+                url: '/excluir',
+                data: {id:id}
+            }).done(function(data){
+                window.location.href='http://localhost:3000/buscando';
+            }).fail(function(erro){
+                alert("verifique os campos")
+            });
+    }
+   /* function alterar(id){
+            $.ajax({
+            type: 'post',
+            url: '/alterar',
+            data:{id:id}
+
+            }).done(function(data){
+            window.location.href='/persons'; //se deu certo vou pro index
+            });
+        }
+    */
+/*A paginação é feita com elementos HTML de lista para que leitores de telas possam anunciar 
+o número de links disponíveis. Use um elemento <nav> como envolto para identificá-lo como 
+uma seção de navegação aos leitores de telas e outras tecnologias assistivas.
+Além do mais, já que as páginas possuem mais de uma seção de navegação, normalmente, 
+é aconselhado usar um aria-label descritivo, no <nav>. Por exemplo, se o componente 
+de paginação é usado para navegar entre um conjunto de resultados de pesquisa, 
+uma boa aria-label seria aria-label="Páginas dos resultados de pesquisa".
+*/
+    function paginacao(pagina){
+        var trazbuscapag= $("#buscar").val();
+        carregarDados(trazbuscapag,pagina);    
+    }
+    function busca(){
+        var trazbuscar = $("#buscar").val();
+        buscarDados(trazbuscar,1);
+    }
+    function buscarDados(buscar,inicio){
+/* Ele é um conjunto de técnicas de desenvolvimento voltado para a web que permite que aplicações
+ trabalhem de modo assíncrono, processando qualquer requisição ao servidor em segundo plano.
+*/
+        $.ajax({
+            type: 'GET',
+            url: '/persons',
+            data: {filtro:buscar,inicio:inicio}
+        }).done(function (data) {
+            var name=data.name;
+            var valor=data.valor;
+
+            var info = '';
+            for (i = 0; i < name.length; i++) {
+                info += '<tr>';
+                info += '<th>' + name[i]._id + '</th>';
+                info += '<td>' + name[i].name + '</td>';
+                info += '<td>' + name[i].number + '</td>';
+                info += '<td><a href="/atualizar?id='+name[i]._id+'"  class="btn btn-default">Editar</a></td>';
+                info += '<td><button "/excluir" class="btn btn-danger" onclick="excluir(\''+name[i]._id+'\')" >Excluir</button></td>';
+                info += '</tr>';
+            }
+
+            $("#informacoes").html(info);
+
+            var valorfinalpaginacao=valor/5;
+            var valoritempag='';
+
+            for (i = 1; i < valorfinalpaginacao+1; i++) {
+                  valoritempag += '<button onclick="paginacao('+i+')">'+i+'</button>';
+               }
+            $("#paginacao").html(valoritempag);
+            
+        });
+        
+    }
+
+    buscarDados('',1);
+
+
+</script>
+
+</html>
